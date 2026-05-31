@@ -73,7 +73,7 @@ export default function Banner() {
         </div>
 
         {/* Trending */}
-        <div className="relative z-10 flex flex-wrap items-center justify-center gap-3 mb-60">
+        <div className="relative z-10 flex flex-wrap items-center justify-center gap-3 mb-20 lg:mb-60">
           <span className="text-xs uppercase tracking-wider text-gray-500">
             Trending Positions
           </span>
@@ -101,7 +101,8 @@ export default function Banner() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute -bottom-235 left-0 w-full opacity-40">
+      {/* Globe Image */}
+      <div className="hidden xl:block pointer-events-none absolute -bottom-40 xl:-bottom-135 2xl:-bottom-250 left-0 w-full opacity-40">
         <Image src={globe} alt="Globe" className="h-auto w-full" />
       </div>
 
