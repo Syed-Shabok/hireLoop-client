@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Person, Envelope, Lock, ArrowRight } from "@gravity-ui/icons";
 import { signUp } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { Description, Label, Radio, RadioGroup } from "@heroui/react";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -12,6 +13,7 @@ export default function SignupPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("seeker");
 
   const router = useRouter();
 
@@ -25,6 +27,7 @@ export default function SignupPage() {
         name,
         email,
         password,
+        role,
       });
 
       console.log("Signup Success:", result);
@@ -69,7 +72,7 @@ export default function SignupPage() {
               </p>
             </div>
 
-            <form onSubmit={handleSignup} className="space-y-5">
+            <form onSubmit={handleSignup} className="space-y-6">
               {/* Name */}
               <div>
                 <label className="mb-2 block text-sm text-gray-300">
@@ -131,6 +134,33 @@ export default function SignupPage() {
                 </div>
               </div>
 
+              {/* User Type */}
+              <div className="py-2 ">
+                <RadioGroup
+                  defaultValue="seeker"
+                  name="plan-orientation"
+                  orientation="horizontal"
+                  onChange={(value) => setRole(value)}
+                >
+                  <Radio className="flex items-center" value="seeker">
+                    <Radio.Control>
+                      <Radio.Indicator />
+                    </Radio.Control>
+                    <Radio.Content>
+                      <Label className="text-lg">Job Seeker</Label>
+                    </Radio.Content>
+                  </Radio>
+                  <Radio className="flex items-center" value="recruiter">
+                    <Radio.Control>
+                      <Radio.Indicator />
+                    </Radio.Control>
+                    <Radio.Content>
+                      <Label className="text-lg">Recruiter</Label>
+                    </Radio.Content>
+                  </Radio>
+                </RadioGroup>
+              </div>
+
               {/* Submit */}
               <button
                 type="submit"
@@ -164,7 +194,7 @@ export default function SignupPage() {
             <p className="mt-8 text-center text-sm text-gray-400">
               Already have an account?{" "}
               <Link
-                href="/login"
+                href="/auth/signin"
                 className="font-medium text-violet-400 hover:text-violet-300"
               >
                 Sign In

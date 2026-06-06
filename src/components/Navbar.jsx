@@ -12,6 +12,7 @@ export default function Navbar() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const user = session?.user;
+  console.log("Current User:", user);
 
   const navLinks = [
     { label: "Find Jobs", href: "/jobs" },
