@@ -10,8 +10,11 @@ import {
   ListBox,
   Button,
   Card,
+  toast,
 } from "@heroui/react";
 import { MapPin, PaperPlane, Xmark } from "@gravity-ui/icons";
+import { createJob } from "@/lib/actions/jobs";
+import { redirect } from "next/navigation";
 
 export default function NewJobPage() {
   const [isRemote, setIsRemote] = useState(false);
@@ -48,7 +51,7 @@ export default function NewJobPage() {
     const data = Object.fromEntries(formData.entries());
 
     // Injecting fake automated company data into the final listing payload
-    data.companyId = `COMP-${Math.floor(1000 + Math.random() * 9000)}`;
+    data.companyId = `COMP-123`;
     data.companyName = "SkillSphere Labs Ltd.";
     data.isRemote = isRemote;
     data.status = "active";
@@ -67,6 +70,15 @@ export default function NewJobPage() {
         "Saving job configuration payload with automated company data:",
         data,
       );
+
+      const res = await createJob(data);
+
+      if (res.insertedId) {
+        toast.success("Job Posted Successfully!");
+        e.target.reset();
+        setIsRemote(false);
+        redirect("/dashboard/recruiter");
+      }
     } catch (err) {
       console.error(err);
     } finally {
