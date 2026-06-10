@@ -2,9 +2,12 @@ import { getCompanyJobs } from "@/lib/api/jobs";
 import React from "react";
 import { Chip, Table, Button } from "@heroui/react";
 import { Eye, Pencil, TrashBin } from "@gravity-ui/icons";
+import { getLoggedInRecruiterCompany } from "@/lib/api/companies";
 
 export default async function RecruiterJobs() {
-  const companyId = "COMP-123";
+  const company = await getLoggedInRecruiterCompany();
+
+  const companyId = company._id || "COMP-123";
   const jobs = (await getCompanyJobs(companyId)) || [];
 
   return (
@@ -21,7 +24,8 @@ export default async function RecruiterJobs() {
       <div className="border border-[#222226] bg-[#121214] rounded-xl overflow-hidden shadow-2xl">
         <Table aria-label="Company job listings control panel">
           <Table.ResizableContainer>
-            <Table.Content className="min-w-[700px]">
+            <Table.Content className="min-w-[800px]">
+              {/* Increased min-w slightly to accommodate the new column */}
               <Table.Header>
                 <Table.Column
                   isRowHeader
@@ -32,29 +36,48 @@ export default async function RecruiterJobs() {
                   Job Title
                   <Table.ColumnResizer />
                 </Table.Column>
+
                 <Table.Column defaultWidth="1fr" id="location" minWidth={130}>
                   Location
                   <Table.ColumnResizer />
                 </Table.Column>
+
                 <Table.Column defaultWidth="1.2fr" id="salary" minWidth={150}>
                   Compensation
                   <Table.ColumnResizer />
                 </Table.Column>
+
+                {/* NEW: Job Type Column Header */}
+                <Table.Column defaultWidth="1fr" id="jobType" minWidth={120}>
+                  Type
+                  <Table.ColumnResizer />
+                </Table.Column>
+
                 <Table.Column defaultWidth="1fr" id="status" minWidth={100}>
                   Status
                   <Table.ColumnResizer />
                 </Table.Column>
+
                 <Table.Column defaultWidth="1fr" id="actions" minWidth={120}>
                   Actions
                 </Table.Column>
               </Table.Header>
-
               <Table.Body emptyContent="No structural records matches this workspace allocation.">
                 {jobs.map((job) => {
                   const jobId = job._id;
+
+                  // Format currency and breakdown nicely if they exist
+                  const currencySymbol =
+                    job.currency === "BDT"
+                      ? "৳"
+                      : job.currency === "EUR"
+                        ? "€"
+                        : job.currency === "GBP"
+                          ? "£"
+                          : "$";
                   const displaySalary =
                     job.minSalary && job.maxSalary
-                      ? `${Number(job.minSalary).toLocaleString()} - ${Number(job.maxSalary).toLocaleString()}`
+                      ? `${currencySymbol}${Number(job.minSalary).toLocaleString()} - ${Number(job.maxSalary).toLocaleString()}`
                       : "Not specified";
 
                   return (
@@ -64,9 +87,13 @@ export default async function RecruiterJobs() {
                           {job.title}
                         </div>
                         <div className="text-xs text-[#52525b] mt-0.5">
-                          Deadline: {job.deadline}
+                          Category:{" "}
+                          <span className="capitalize">
+                            {job.category || "General"}
+                          </span>
                         </div>
                       </Table.Cell>
+
                       <Table.Cell className="text-[#e4e4e7]">
                         {job.isRemote ? (
                           <Chip
@@ -82,9 +109,24 @@ export default async function RecruiterJobs() {
                           </span>
                         )}
                       </Table.Cell>
+
                       <Table.Cell className="text-[#e4e4e7] font-mono text-xs">
                         {displaySalary}
                       </Table.Cell>
+
+                      {/* NEW: Job Type Cell Data */}
+                      <Table.Cell>
+                        <Chip
+                          size="sm"
+                          variant="flat"
+                          className="bg-[#161619] text-[#e4e4e7] border border-[#222226] capitalize font-medium"
+                        >
+                          {job.jobType
+                            ? job.jobType.replace("-", " ")
+                            : "Full-time"}
+                        </Chip>
+                      </Table.Cell>
+
                       <Table.Cell>
                         <Chip
                           color={
@@ -97,6 +139,7 @@ export default async function RecruiterJobs() {
                           {job.status || "inactive"}
                         </Chip>
                       </Table.Cell>
+
                       <Table.Cell>
                         <div className="flex items-center gap-2">
                           <Button
