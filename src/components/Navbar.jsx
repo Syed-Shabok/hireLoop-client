@@ -15,9 +15,9 @@ export default function Navbar() {
   console.log("Current User:", user);
 
   const navLinks = [
-    { label: "Find Jobs", href: "/jobs" },
-    { label: "Post a Job", href: "/post-job" },
-    { label: "Admin Dashboard", href: "/admin" },
+    { label: "Browse Jobs", href: "/jobs" },
+    { label: "Companies", href: "/companies" },
+    { label: "Pricing", href: "/pricing" },
   ];
 
   const handleSignOut = async () => {
