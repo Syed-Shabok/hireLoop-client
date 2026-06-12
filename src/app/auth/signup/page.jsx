@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Person, Envelope, Lock, ArrowRight } from "@gravity-ui/icons";
 import { signUp } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Description, Label, Radio, RadioGroup } from "@heroui/react";
 
 export default function SignupPage() {
@@ -14,6 +14,9 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("seeker");
+
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect") || "/";
 
   const router = useRouter();
 
@@ -33,7 +36,7 @@ export default function SignupPage() {
       console.log("Signup Success:", result);
 
       // Example:
-      router.push("/");
+      router.push(redirectUrl);
     } catch (error) {
       console.error("Signup Error:", error);
     } finally {
@@ -194,7 +197,7 @@ export default function SignupPage() {
             <p className="mt-8 text-center text-sm text-gray-400">
               Already have an account?{" "}
               <Link
-                href="/auth/signin"
+                href={`/auth/signin?redirect=${redirectUrl}`}
                 className="font-medium text-violet-400 hover:text-violet-300"
               >
                 Sign In

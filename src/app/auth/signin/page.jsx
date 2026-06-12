@@ -4,12 +4,16 @@ import Link from "next/link";
 import { useState } from "react";
 import { Envelope, Lock, ArrowRight } from "@gravity-ui/icons";
 import { signIn } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect") || "/";
+
   const router = useRouter();
 
   const handleLogin = async (e) => {
@@ -24,7 +28,7 @@ export default function LoginPage() {
 
       console.log("Login Success:", result);
 
-      router.push("/");
+      router.push(redirectUrl);
     } catch (error) {
       console.error("Login Error:", error);
     } finally {
@@ -135,7 +139,7 @@ export default function LoginPage() {
             <p className="mt-8 text-center text-sm text-gray-400">
               Don&apos;t have an account?{" "}
               <Link
-                href="/auth/signup"
+                href={`/auth/signup?redirect=${redirectUrl}`}
                 className="font-medium text-violet-400 hover:text-violet-300"
               >
                 Create Account
