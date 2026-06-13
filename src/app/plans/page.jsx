@@ -16,6 +16,7 @@ import {
   Lock,
   Xmark,
 } from "@gravity-ui/icons";
+import Link from "next/link";
 
 export default function PricingPage() {
   const [targetGroup, setTargetGroup] = useState("seeker"); // 'seeker' or 'recruiter'
@@ -192,14 +193,29 @@ export default function PricingPage() {
                 {plan.description}
               </p>
 
-              <Button
-                fullWidth
-                size="md"
-                variant={plan.variant === "flat" ? "solid" : "bordered"}
-                className={`mt-10 font-semibold text-sm ${plan.variant === "flat" ? "bg-white hover:bg-[#e4e4e7] text-black" : "border-[#2e2e33] hover:border-[#3f3f46] text-[#e4e4e7]"}`}
-              >
-                {plan.ctaText}
-              </Button>
+              <form action="/api/checkout_sessions" method="POST">
+                <section>
+                  <button
+                    type="submit"
+                    role="link"
+                    className={`mt-10 font-semibold text-sm w-full py-3 rounded-lg flex items-center justify-center transition ${plan.variant === "flat" ? "bg-white hover:bg-[#e4e4e7] text-black" : "border border-[#2e2e33] hover:border-[#3f3f46] text-[#e4e4e7]"}`}
+                  >
+                    <ShoppingBag width={16} height={16} className="mr-2.5" />
+                    Checkout
+                  </button>
+                </section>
+              </form>
+
+              {/* <Link href={`/auth/signup`}>
+                <Button
+                  fullWidth
+                  size="md"
+                  variant={plan.variant === "flat" ? "solid" : "bordered"}
+                  
+                >
+                  {plan.ctaText}
+                </Button>
+              </Link> */}
             </Card>
           ))}
         </div>
