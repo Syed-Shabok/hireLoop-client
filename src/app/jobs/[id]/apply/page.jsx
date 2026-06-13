@@ -7,6 +7,7 @@ import { getApplicationsByApplicant } from "@/lib/api/applications";
 import Link from "next/link";
 import { Card, Chip } from "@heroui/react";
 import { Paperclip, ShoppingBag, CircleInfo, Lock } from "@gravity-ui/icons";
+import { getPlanById } from "@/lib/api/plans";
 
 const JobApplyPage = async ({ params }) => {
   const { id } = await params;
@@ -53,10 +54,7 @@ const JobApplyPage = async ({ params }) => {
 
   const applications = await getApplicationsByApplicant(user._id);
 
-  const plan = {
-    name: "free",
-    maxApplicationsPerMonth: 3,
-  };
+  const plan = await getPlanById(user?.plan || "seeker_free");
 
   const job = await getJobById(id);
 

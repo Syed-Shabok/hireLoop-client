@@ -4,6 +4,7 @@ import React from "react";
 import { Card, Button } from "@heroui/react";
 import { Check, Envelope } from "@gravity-ui/icons";
 import Link from "next/link";
+import { addSubscription } from "@/lib/actions/subscriptions";
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams;
@@ -14,6 +15,7 @@ export default async function Success({ searchParams }) {
   const {
     status,
     customer_details: { email: customerEmail },
+    metadata,
   } = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ["line_items", "payment_intent"],
   });
@@ -23,6 +25,14 @@ export default async function Success({ searchParams }) {
   }
 
   if (status === "complete") {
+    const subInfo = {
+      email: customerEmail,
+      planId: metadata.planId,
+    };
+
+    const result = await addSubscription(subInfo);
+    console.log(result);
+
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#09090b] text-white p-6 dark:text-neutral-100">
         <Card className="max-w-[500px] w-full bg-[#121214] border border-[#222226] rounded-2xl p-10 flex flex-col items-center text-center shadow-2xl relative overflow-hidden">
