@@ -20,10 +20,13 @@ const JobApply = ({ job, applicant }) => {
   const [submitted, setSubmitted] = useState(false);
   const formRef = useRef(null);
 
+  console.log("Job Apply Page: ", applicant);
+  console.log("Job Apply Page: ", applicant._id);
+
   // Fallbacks if data isn't loaded correctly
   const jobTitle = job?.title || "the position";
   const jobId = job?._id || "unknown_job_id";
-  const applicantId = applicant?._id || "anonymous_applicant";
+  const applicantId = applicant?.id || "anonymous_applicant";
   const applicantName = applicant?.name || "Applicant";
 
   const handleSubmit = async (e) => {

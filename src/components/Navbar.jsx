@@ -12,13 +12,25 @@ export default function Navbar() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const user = session?.user;
-  console.log("Current User:", user);
+  // console.log("Current User:", user);
 
   const navLinks = [
     { label: "Browse Jobs", href: "/jobs" },
     { label: "Companies", href: "/companies" },
     { label: "Pricing", href: "/plans" },
   ];
+
+  const dashboardLinks = {
+    seeker: "/dashboard/seeker",
+    recruiter: "/dashboard/recruiter",
+  };
+
+  if (user?.email) {
+    navLinks.push({
+      label: "Dashboard",
+      href: dashboardLinks[user?.role || "seeker"],
+    });
+  }
 
   const handleSignOut = async () => {
     await authClient.signOut({
